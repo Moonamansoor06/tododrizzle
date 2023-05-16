@@ -26,7 +26,7 @@ export async function GET(req: NextRequest,) {
 
   } 
 
-  export async function POST(req: NextApiRequest) {
+  export async function POST(request:NextRequest,req: NextApiRequest) {
   
     const { bookname, booktype, author, qty, price, isbn } = req.body
 
