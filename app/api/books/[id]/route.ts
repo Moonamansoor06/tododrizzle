@@ -41,28 +41,34 @@ export async function GET(request: NextRequest) {
 
 
 
-export async function PUT(req: NextApiRequest, ) {
-  const { id } = req.body
+// export async function PUT(req: NextRequest, ) {
+//     const req = await request;
+//     console.log("request object is",req.nextUrl.pathname)
+     
+//       const thePath=req.nextUrl.pathname
+//       const idstr = thePath.substring(thePath.lastIndexOf('/') + 1)
+//       const rid =parseInt(idstr,10)
+//        console.log("id is",typeof rid)
+//       if(rid){
+//     if(req.body.id){
+//     const { bookname, booktype, author, qty, price, isbn } = req.body
 
-    if(req.body.id){
-    const { bookname, booktype, author, qty, price, isbn } = req.body
+//     if (!bookname && !booktype && !author && !qty && !price && !isbn) {
+//       NextResponse.json({ error: 'At least one field is required to update' })
+//       return
+//     }
+//     const updatedBook = await db.update(BooksTable)
+//       .set({ bookname, booktype, author, qty, price, isbn })
+//       .returning()
 
-    if (!bookname && !booktype && !author && !qty && !price && !isbn) {
-      NextResponse.json({ error: 'At least one field is required to update' })
-      return
-    }
-    const updatedBook = await db.update(BooksTable)
-      .set({ bookname, booktype, author, qty, price, isbn })
-      .returning()
-
-    if (updatedBook.length > 0) {
-      NextResponse.json({ book: updatedBook[0] })
-    } else {
-      NextResponse.json({ error: `Book with id ${id} not found` })
-    }
-}
+//     if (updatedBook.length > 0) {
+//       NextResponse.json({ book: updatedBook[0] })
+//     } else {
+//       NextResponse.json({ error: `Book with id ${id} not found` })
+//     }
+// }
     
-}
+// }
 export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
     if(req.body.id){
     const deletedBook = await db.delete(BooksTable).returning()
