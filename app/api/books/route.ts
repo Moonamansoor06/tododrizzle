@@ -46,15 +46,4 @@ export async function GET(req: NextRequest,) {
 
     NextResponse.json({ book: newBook })
   }
-  export async function DELETE(request: NextRequest) {
-    const req = await request.json();
-
-    if(req.id){
-        const deletedBook = await db.delete(BooksTable).returning()
-    
-        if (deletedBook.length > 0) {
-            NextResponse.json({ book: deletedBook[0] });
-          } else {
-            NextResponse.json({ error: 'Book not found' });
-          }}
-      }
+  

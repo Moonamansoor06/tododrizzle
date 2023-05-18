@@ -63,19 +63,16 @@ const newOrders: NewOrder[] = [
   {
     bookid: 1,
     customerid: 1,
-    authorid: 1,
     qty: '2',
   },
   {
     bookid: 2,
     customerid: 2,
-    authorid: 2,
     qty: '1',
   },
   {
     bookid: 3,
     customerid: 3,
-    authorid: 3,
     qty: '3',
   },
 ];
@@ -123,7 +120,6 @@ const createCustomersTable = await sql.query(`
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email VARCHAR(255) UNIQUE NOT NULL,
-      address VARCHAR(255),
       "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 `)

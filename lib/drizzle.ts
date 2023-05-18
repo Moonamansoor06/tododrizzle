@@ -26,7 +26,7 @@ export const BooksTable = pgTable(
 export const CustomerTable = pgTable(
   'customer',
   {
-    customerid: serial('customerid').primaryKey(),
+  id: serial('id').primaryKey(),
     customername: text('customername').notNull(),
     customeremail: text('customeremail').notNull(),
   },
@@ -41,24 +41,23 @@ export const CustomerTable = pgTable(
 export const AuthorTable = pgTable(
   'author',
   {
-    authorid: serial('authorid').primaryKey(),
+    id: serial('id').primaryKey(),
     authorname: text('authorname').notNull(),
   },
   (author) => {
     return {
-      uniqueIdx: uniqueIndex('unique_idx').on(author.authorid),
+      uniqueIdx: uniqueIndex('unique_idx').on(author.id),
     };
   }
 );
 
 // Define the Order table
 export const OrderTable = pgTable(
-  'order',
+  'orderdetails',
   {
-    orderid: serial('orderid').primaryKey(),
+    orderid: serial('id').primaryKey(),
     bookid: serial('bookid').notNull(),
     customerid: serial('customerid').notNull(),
-    authorid: serial('authorid').notNull(),
     qty: numeric('qty').notNull(),
   },
   (order) => {

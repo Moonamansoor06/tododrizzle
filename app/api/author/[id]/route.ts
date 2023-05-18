@@ -1,22 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { NextRequest, NextResponse } from "next/server";
-import { BooksTable } from '@/lib/drizzle'
+import { AuthorTable } from '@/lib/drizzle'
 import { db } from '@/lib/drizzle'
 import { eq } from 'drizzle-orm';
-
-
-type Book = {
-  id: number
-  bookname: string
-  booktype: string
-  author: string
-  qty: number
-  price: number
-  isbn: string
-  createdAt: Date
-}
-
-
 
 export async function GET(request: NextRequest) {
     const req = await request;
@@ -25,16 +11,16 @@ export async function GET(request: NextRequest) {
     const thePath=req.nextUrl.pathname
     const idstr = thePath.substring(thePath.lastIndexOf('/') + 1)
     const rid =parseInt(idstr,10)
-     console.log("id is", rid)
+     console.log("id is",typeof rid)
     if(rid){
        
 
-    const books = await db.select().from(BooksTable)
-   .where(eq(BooksTable.id,rid))  
+    const author = await db.select().from(AuthorTable).where(eq(AuthorTable.id,rid))
+   .where(eq(AuthorTable.id,rid))  
    
-    console.log('Books:', books);
+    console.log('Author:', author);
 
-    return NextResponse.json( books );
+    return NextResponse.json( author );
   }
 }
 
@@ -51,20 +37,20 @@ export async function PUT(request: NextRequest,apiRequest:NextApiRequest ) {
        console.log("id is",typeof rid)
       if(rid){
     if(apiRequest.body){
-    const { bookname, booktype, author, qty, price, isbn } = apiRequest.body
+    const { authorname} = apiRequest.body
 
-    if (!bookname && !booktype && !author && !qty && !price && !isbn) {
+    if (!authorname ) {
       NextResponse.json({ error: 'At least one field is required to update' })
       return
     }
-    const updatedBook = await db.update(BooksTable)
-      .set({ bookname, booktype, author, qty, price, isbn })
+    const updatedAuthor = await db.update(AuthorTable)
+      .set({ authorname })
       .returning()
 
-    if (updatedBook.length > 0) {
-      NextResponse.json({ book: updatedBook[0] })
+    if (updatedAuthor.length > 0) {
+      NextResponse.json({ book: updatedAuthor[0] })
     } else {
-      NextResponse.json({ error: `Book with id ${rid} not found` })
+      NextResponse.json({ error: `Author with id ${rid} not found` })
     }
 }
 }
@@ -78,12 +64,10 @@ export async function DELETE(request: NextRequest, ) {
       const rid =parseInt(idstr,10)
        console.log("id is",typeof rid)
       if(rid){
-    const deletedBook = await db.delete(BooksTable).where(eq(BooksTable.id,rid))
-    .returning()
-
-    if (deletedBook.length > 0) {
-     NextResponse.json({ book: deletedBook[0] });
+    const deletedAuthor = await db.delete(AuthorTable).returning().where(eq(AuthorTable.id,rid))
+    if (deletedAuthor.length > 0) {
+     NextResponse.json({ book: deletedAuthor[0] });
       } else {
-       NextResponse.json({ error: 'Book not found' });
+       NextResponse.json({ error: 'Author not found' });
       }}
   }
