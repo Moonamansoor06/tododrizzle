@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next'
+
 import { NextRequest, NextResponse } from "next/server";
 import { TodoTable } from '@/lib/drizzle'
 import { db } from '@/lib/drizzle'
@@ -23,49 +23,49 @@ export async function GET(request: NextRequest) {
   }
 }
 
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    if (params.id) {
+      const req = await request;
+      
 
+      const { name, completed } = await req.json();
+      console.log("name is", name,completed);
 
+      
+      const updatedTodo = await db
+        .update(TodoTable)
+        .set({ name, completed })
+        .where(eq(TodoTable.id, params.id))
+        .returning();
 
-export async function PUT(request: NextRequest,apiRequest:NextApiRequest ) {
-    const req = await request;
-    console.log("request object is",req.nextUrl.pathname)
-     
-      const thePath=req.nextUrl.pathname
-      const rid = thePath.substring(thePath.lastIndexOf('/') + 1)
-
-       console.log("id is",typeof rid)
-      if(rid){
-    if(apiRequest.body){
-    const { name,completed} = apiRequest.body
-
-    if (!name||!completed ) {
-      NextResponse.json({ error: 'At least one field is required to update' })
-      return
+      console.log("updated todo", updatedTodo);
+      return NextResponse.json({ todo: updatedTodo });
     }
-    const updatedTodo = await db.update(TodoTable)
-      .set({ name,completed })
-      .returning()
-
-    if (updatedTodo.length > 0) {
-      NextResponse.json({ todo: updatedTodo[0] })
-    } else {
-      NextResponse.json({ error: `todo with id ${rid} not found` })
-    }
-}
-}
-}
-export async function DELETE(request: NextRequest, ) {
-    const req = await request;
-    console.log("request object is",req.nextUrl.pathname)
-     
-      const thePath=req.nextUrl.pathname
-      const rid = thePath.substring(thePath.lastIndexOf('/') + 1)
-            console.log("id is",typeof rid)
-      if(rid){
-    const deletedTodo = await db.delete(TodoTable).returning().where(eq(TodoTable.id,rid))
-    if (deletedTodo.length > 0) {
-     NextResponse.json({ book: deletedTodo[0] });
-      } else {
-       NextResponse.json({ error: 'Todo not found' });
-      }}
+  } catch (error) {
+    console.log("error", error);
+    return NextResponse.json({ error: `Error updating todo with id ${params.id}`, todo: null });
   }
+}
+
+export async function DELETE(request: NextRequest) {
+const req = await request;
+    console.log("request object is", req.nextUrl.pathname);
+
+    const thePath = req.nextUrl.pathname;
+    const rid = thePath.substring(thePath.lastIndexOf('/') + 1);
+    console.log("id is", typeof rid);
+      try {
+    
+
+    if (rid) {
+      const deletedTodo = await db.delete(TodoTable).returning().where(eq(TodoTable.id, rid));
+      console.log(deletedTodo);
+      return NextResponse.json({ todo: deletedTodo });
+    }
+  } catch (error) {
+    console.log("error", error);
+    return NextResponse.json({ error: `Error deleting todo with id ${rid}`, todo: null });
+  }
+}
+

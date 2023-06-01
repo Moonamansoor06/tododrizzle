@@ -4,13 +4,13 @@ import { sql } from '@vercel/postgres';
 import { drizzle } from 'drizzle-orm/vercel-postgres';
 
 
-export const TodoTable:any = pgTable(
+export const TodoTable = pgTable(
   'todo',
   {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').primaryKey().default(''),
     name: text('name').notNull(),
     completed: boolean('completed').notNull(),   
-    created_at:timestamp('created_at')
+    created_at:timestamp('created_at').default(new Date)
   },
   (todo) => {
     return {
